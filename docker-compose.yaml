@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: cbmongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_volume:/data/db
+  api:
+    image: cbapi
+    depends_on:
+      - mongodb
+    build: 
+      context: server
+      dockerfile: ./dockerfile
+    ports:
+      - 3000:3000
+
+  ui:
+    image: cbui
+    depends_on:
+      - api
+    build:
+      context: cookbookui
+      dockerfile: ./dockerfile
+    ports:
+      - 3010:3010
+
+volumes:
+  mongo_volume:
